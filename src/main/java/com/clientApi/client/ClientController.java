@@ -12,7 +12,7 @@ import java.util.Map;
  * A class to set the control to the user recovered from the database
  */
 @RestController
-@RequestMapping(path = "api/v1/user")
+@RequestMapping(path = "api/v1/client")
 @CrossOrigin(origins = "http://localhost:3000",
         methods = {RequestMethod.GET,
                 RequestMethod.POST,
@@ -30,6 +30,22 @@ public class ClientController {
     @GetMapping
     public List<Client> getClients() {
         return clientService.getClients();
+    }
+
+    @PostMapping
+    public void registerNewClient(@RequestBody Client client) {
+        clientService.addNewClient(client);
+    }
+
+    @PutMapping(path = "{clientId}")
+    public void updateClient(@PathVariable("clientId") Long clientId,
+                             @RequestParam(required = false) String name,
+                             @RequestParam(required = false) String email){
+        clientService.updateClient(clientId, name, email);
+    }
+    @DeleteMapping(path = "{clientId}")
+    public void deleteClient(@PathVariable("clientId") Long clientId){
+        clientService.deleteClient(clientId);
     }
 
     @PostMapping("/login")
