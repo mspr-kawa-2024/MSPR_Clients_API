@@ -8,9 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-/**
- * A class to set the control to the user recovered from the database
- */
 @RestController
 @RequestMapping(path = "api/v1/client")
 @CrossOrigin(origins = "http://localhost:3000",
@@ -21,10 +18,12 @@ import java.util.Map;
 public class ClientController {
 
     private final ClientService clientService;
+    private final CommandeService commandeService;
 
     @Autowired
-    public ClientController(ClientService clientService) {
+    public ClientController(ClientService clientService, CommandeService commandeService) {
         this.clientService = clientService;
+        this.commandeService = commandeService;
     }
 
     @GetMapping
@@ -43,6 +42,7 @@ public class ClientController {
                              @RequestParam(required = false) String email){
         clientService.updateClient(clientId, name, email);
     }
+
     @DeleteMapping(path = "{clientId}")
     public void deleteClient(@PathVariable("clientId") Long clientId){
         clientService.deleteClient(clientId);
@@ -58,5 +58,24 @@ public class ClientController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(jsonSend);
         }
     }
-}
 
+    @GetMapping("/command/{id}")
+    public ResponseEntity<Map<String, Object>> getCommande(@PathVariable Long id) {
+        Map<String, Object> commande = commandeService.getCommandeById(id);
+        if (commande != null) {
+            return ResponseEntity.ok(commande);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+    @GetMapping("/commands")
+    public ResponseEntity<List<Map<String, Object>>> getCommands() {
+        List<Map<String, Object>> commandes = commandeService.getAllCommandes();
+        if (commandes != null) {
+            return ResponseEntity.ok(commandes);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+}
