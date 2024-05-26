@@ -26,6 +26,11 @@ jobs:
       - name: Build with Maven
         run: mvn clean package
 
+      - name: Debug environment variables
+        run: |
+          echo "DOCKER_HUB_USERNAME=${{ secrets.DOCKER_HUB_USERNAME }}"
+          echo "DOCKER_HUB_PASSWORD is set"
+
       - name: Log in to Docker Hub
         env:
           DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
