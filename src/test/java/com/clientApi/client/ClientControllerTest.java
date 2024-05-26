@@ -20,11 +20,12 @@ class ClientControllerTest {
     private ClientService clientService;
 
     private ClientController clientController;
+    private CommandeService commandeService;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        clientController = new ClientController(clientService);
+        clientController = new ClientController(clientService, commandeService);
     }
 
     @Test
