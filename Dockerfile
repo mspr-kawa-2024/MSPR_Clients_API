@@ -1,5 +1,4 @@
-# Use the official OpenJDK image as a base image
-FROM openjdk:11-jre-slim
+FROM adoptopenjdk:11-jre-hotspot
 
 # Add a volume pointing to /tmp
 VOLUME /tmp
@@ -14,4 +13,4 @@ ARG JAR_FILE=target/*.jar
 COPY ${JAR_FILE} app.jar
 
 # Run the jar file
-ENTRYPOINT ["java","-jar","/app.jar"]
+ENTRYPOINT ["java", "-jar", "/app.jar"]
