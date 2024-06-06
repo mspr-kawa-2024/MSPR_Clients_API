@@ -1,6 +1,7 @@
 package com.clientApi.client;
 
 import jakarta.transaction.Transactional;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +39,10 @@ public class ClientService {
             response.put("message", "Authentication failed");
         }
         return response;
+    }
+
+    public Client getClientById(Long id) {
+        return clientRepository.findById(id).orElse(null);
     }
 
     public void addNewClient(Client client) {
