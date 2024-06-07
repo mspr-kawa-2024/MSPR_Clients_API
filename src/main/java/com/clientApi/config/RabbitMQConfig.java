@@ -1,5 +1,6 @@
 package com.clientApi.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.core.Queue;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMQConfig {
 
     public static final String ORDER_QUEUE_NAME = "orderQueue";
-    public static final String RESPONSE_QUEUE_NAME = "responseQueue";
+    public static final String RESPONSE_QUEUE_NAME = "orderToSendQueue";
     public static final String ORDER_PRODUCT_QUEUE_NAME = "orderProductQueue";
 
     @Bean

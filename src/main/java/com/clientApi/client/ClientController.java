@@ -1,6 +1,7 @@
 package com.clientApi.client;
 
 import com.clientApi.config.RabbitMQConfig;
+import com.clientApi.config.RabbitMQReceiver;
 import com.clientApi.config.RabbitMQSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,7 +23,10 @@ public class ClientController {
     private final ClientService clientService;
 
     @Autowired
-    private RabbitMQSender rabbitTemplate;
+    private RabbitMQSender rabbitMQSender;
+
+    @Autowired
+    private RabbitMQReceiver rabbitMQReceiver;
 
     @Autowired
     public ClientController(ClientService clientService) {
@@ -62,11 +66,10 @@ public class ClientController {
     }
 
     @GetMapping("/{clientId}/orders/{orderId}/products")
-    public void getCustomerOrderProducts(@PathVariable Long clientId, @PathVariable Long orderId) {
-        String ids = clientId + "," + orderId;
-        rabbitTemplate.sendClientIdAndOrderId(ids);
-        //List<?> response = (List<?>) rabbitTemplate.receiveAndConvert(RabbitMQConfig.RESPONSE_QUEUE_NAME);
-        //System.out.println(response);
-        //return ResponseEntity.ok(response);
+    public ResponseEntity<?> getCustomerOrderProducts(@PathVariable Long clientId, @PathVariable Long orderId) {
+        String ids = clientId.toString() + "," + orderId.toString();
+        rabbitMQSender.sendClientIdAndOrderId(orderId.toString());
+        String commandOfClient = rabbitMQReceiver.getReceivedMessage();
+        return ResponseEntity.ok(commandOfClient);
     }
 }
