@@ -16,20 +16,10 @@ public class RabbitMQReceiver {
 
     private String receivedMessage;
 
-    @RabbitListener(queues = "orderQueue")
-    public String receiveProductInOrder() {
-        Object response = rabbitTemplate.convertSendAndReceive("responseQueue");
-        return response != null ? response.toString() : null;
-    }
-
     @RabbitListener(queues = "orderToSendQueue")
     public void receiveOrderOfClient(String message) {
         this.receivedMessage = message;
-        try {
-            System.out.println(message + " good");
-        } catch (NumberFormatException e) {
-            System.err.println("Erreur de parsing des IDs : " + e.getMessage());
-        }
+        System.out.println(message + " good");
     }
 
     public String getReceivedMessage() {
