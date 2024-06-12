@@ -1,13 +1,11 @@
 package com.clientApi.client;
 
-import com.clientApi.config.RabbitMQConfig;
 import com.clientApi.config.RabbitMQReceiver;
 import com.clientApi.config.RabbitMQSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
 import java.util.List;
 
@@ -73,7 +71,7 @@ public class ClientController {
             return ResponseEntity.ok("Client with id " + clientId + " does not exists");
         }
 
-        rabbitMQSender.sendClientIdAndOrderId(orderId.toString());
+        rabbitMQSender.sendClientIdAndOrderId(ids);
 
         // Attendre la réception du message. Vous pouvez implémenter un mécanisme d'attente ou de délai ici.
         try {
