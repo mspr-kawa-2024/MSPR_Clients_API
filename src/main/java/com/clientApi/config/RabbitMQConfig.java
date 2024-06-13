@@ -26,4 +26,13 @@ public class RabbitMQConfig {
     public Queue orderProductQueue() {
         return new Queue(ORDER_PRODUCT_QUEUE_NAME, false);
     }
+
+    @Bean
+    public Queue clientIdsIdQueue() {
+        return new Queue("clientIdsIdQueue", false);
+    }
+    @Bean
+    public Queue responseClientIdsVerificationQueue() {
+        return new Queue("responseClientIdsVerificationQueue", false);
+    }
 }

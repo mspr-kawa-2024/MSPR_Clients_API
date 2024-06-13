@@ -15,11 +15,11 @@ public class RabbitMQReceiver {
     private RabbitTemplate rabbitTemplate;
 
     private String receivedMessage;
+    private String receivedMessageForClientIds;
 
     @RabbitListener(queues = "orderToSendQueue")
     public void receiveOrderOfClient(String message) {
         this.receivedMessage = message;
-        System.out.println(message + " good");
     }
 
     public String getReceivedMessage() {

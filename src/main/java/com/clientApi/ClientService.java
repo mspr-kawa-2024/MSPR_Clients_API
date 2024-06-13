@@ -2,7 +2,10 @@ package com.clientApi;
 
 import com.clientApi.Client;
 import com.clientApi.ClientRepository;
+import com.clientApi.config.RabbitMQReceiver;
+import com.clientApi.config.RabbitMQSender;
 import jakarta.transaction.Transactional;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +18,10 @@ import java.util.*;
 public class ClientService {
 
     private final ClientRepository clientRepository;
+    @Autowired
+    private RabbitMQReceiver rabbitMQReceiver;
+    @Autowired
+    private RabbitMQSender rabbitMQSender;
 
     @Autowired
     public ClientService(ClientRepository clientRepository) {
@@ -78,6 +85,42 @@ public class ClientService {
             }
             client.setEmail(email);
         }
+    }
+
+    @RabbitListener(queues = "clientIdsIdQueue")
+    public void verificationOfClientsToAddInOrder(String clientIdsReceived) {
+        List<Long> ids = convertirEnLongs(clientIdsReceived);
+
+        int i = 0;
+        Long idToSend = null;
+        for (Long id : ids) {
+            if (!clientRepository.existsById(id)) {
+                i++;
+                idToSend = id;
+                break;
+            }
+        }
+        if (i>0) {
+            rabbitMQSender.sendResponseOfIdsVerification(idToSend.toString());
+        } else {
+            rabbitMQSender.sendResponseOfIdsVerification("ok");
+        }
+    }
+
+    private static List<Long> convertirEnLongs(String input) {
+        String[] elements = input.split(",");
+        List<Long> result = new ArrayList<>();
+
+        for (String element : elements) {
+            element = element.trim();
+            try {
+                result.add(Long.parseLong(element));
+            } catch (NumberFormatException e) {
+                System.out.println("Erreur : '" + element + "' n'est pas un nombre valide.");
+                return new ArrayList<>();
+            }
+        }
+        return result;
     }
 }
 

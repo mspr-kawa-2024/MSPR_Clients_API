@@ -16,5 +16,9 @@ public class RabbitMQSender {
     public void sendClientIdAndOrderId(String orderId) {
         rabbitTemplate.convertAndSend("orderQueue", orderId);
     }
+
+    public void sendResponseOfIdsVerification(String response) {
+        rabbitTemplate.convertAndSend("responseClientIdsVerificationQueue", response);
+    }
 }
 
