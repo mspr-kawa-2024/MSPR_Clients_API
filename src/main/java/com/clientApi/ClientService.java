@@ -1,7 +1,8 @@
-package com.clientApi.client;
+package com.clientApi;
 
+import com.clientApi.Client;
+import com.clientApi.ClientRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

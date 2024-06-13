@@ -1,5 +1,6 @@
 package com.clientApi.client;
 
+import com.clientApi.Client;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;

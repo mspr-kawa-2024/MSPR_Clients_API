@@ -1,4 +1,4 @@
-package com.clientApi.client;
+package com.clientApi;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;

@@ -1,4 +1,4 @@
-package com.clientApi.client;
+package com.clientApi;
 
 import com.clientApi.config.RabbitMQReceiver;
 import com.clientApi.config.RabbitMQSender;

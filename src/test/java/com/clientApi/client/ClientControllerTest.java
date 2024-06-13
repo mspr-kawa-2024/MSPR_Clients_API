@@ -1,5 +1,8 @@
 package com.clientApi.client;
 
+import com.clientApi.Client;
+import com.clientApi.ClientController;
+import com.clientApi.ClientService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;

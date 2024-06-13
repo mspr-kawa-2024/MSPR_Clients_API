@@ -1,7 +1,7 @@
-package com.clientApi.client;
+package com.clientApi;
 
+import com.clientApi.Client;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
