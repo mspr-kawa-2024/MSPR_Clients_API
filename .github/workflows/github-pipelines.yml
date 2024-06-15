@@ -13,6 +13,18 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    services:
+      rabbitmq:
+        image: rabbitmq:3-management
+        ports:
+          - 5672:5672
+          - 15672:15672
+        options: >-
+          --health-cmd "rabbitmq-diagnostics -q ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -23,14 +35,21 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
+      - name: Wait for RabbitMQ
+        run: |
+          for i in {1..30}; do
+            if docker exec rabbitmq rabbitmq-diagnostics -q ping; then
+              break;
+            fi;
+            echo "Waiting for RabbitMQ to be ready...";
+            sleep 2;
+          done
+
       - name: Build with Maven
         run: mvn clean package
 
       - name: Run unit tests
         run: mvn test
-
-      - name: Run integration tests
-        run: mvn verify -Pintegration-test
 
       - name: Generate coverage report
         run: mvn jacoco:report

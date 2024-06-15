@@ -1,10 +1,1 @@
-com/clientApi/client/CommandeService.class
 com/clientApi/ClientApplication.class
-com/clientApi/client/ClientController.class
-com/clientApi/client/Client.class
-com/clientApi/client/ClientRepository.class
-com/clientApi/client/CommandeService$1.class
-com/clientApi/client/ClientService.class
-com/clientApi/config/RestTemplateConfig.class
-com/clientApi/client/ClientCredentials.class
-com/clientApi/client/ClientConfig.class
