@@ -10,8 +10,8 @@
 	<groupId>com.client</groupId>
 	<artifactId>elient</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>elient</name>
-	<description>Demo project for Spring Boot</description>
+	<name>MSPR_Clients_API</name>
+	<description>Api clients</description>
 	<properties>
 		<java.version>21</java.version>
 		<sonar.projectKey>mspr-kawa-2024_MSPR_Clients_API</sonar.projectKey>
