@@ -1,1 +1,8 @@
+com/clientApi/config/RabbitMQConfig.class
 com/clientApi/ClientApplication.class
+com/clientApi/ClientService.class
+com/clientApi/Client.class
+com/clientApi/config/RabbitMQSender.class
+com/clientApi/config/RabbitMQReceiver.class
+com/clientApi/ClientRepository.class
+com/clientApi/ClientController.class
