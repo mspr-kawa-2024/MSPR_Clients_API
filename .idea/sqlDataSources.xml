@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DdlMappings">
+    <mapping uuid="9821c104-49ad-499d-9828-3c279a3cb580" name="H2 Mapping">
+      <data-sources db="7e28b7b2-e0ac-41de-901f-443da8097d6a" ddl="4355c0c4-3cf9-4bd7-9e24-e7bcb4801767" />
+      <scope>
+        <node negative="1">
+          <node kind="database" negative="1" />
+          <node kind="database" qname="TEST">
+            <node kind="schema" negative="1" />
+          </node>
+        </node>
+      </scope>
+    </mapping>
+  </component>
+  <component name="SqlDataSourceStorage">
+    <option name="dataSources">
+      <list>
+        <State>
+          <option name="id" value="4355c0c4-3cf9-4bd7-9e24-e7bcb4801767" />
+          <option name="name" value="H2 (DDL)" />
+          <option name="dbmsName" value="H2" />
+          <option name="urls">
+            <array />
+          </option>
+          <option name="outLayout" value="File per object by schema.groovy" />
+        </State>
+      </list>
+    </option>
+  </component>
+</project>

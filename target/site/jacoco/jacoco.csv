@@ -1,8 +1,0 @@
-GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
-elient,com.clientApi.config,RabbitMQSender,15,0,0,0,5,0,3,0,3,0
-elient,com.clientApi.config,RabbitMQConfig,33,0,0,0,6,0,6,0,6,0
-elient,com.clientApi.config,RabbitMQReceiver,10,0,0,0,4,0,3,0,3,0
-elient,com.clientApi,ClientController,47,27,4,0,14,10,4,5,2,5
-elient,com.clientApi,Client,42,73,0,0,15,26,8,10,8,10
-elient,com.clientApi,ClientApplication,8,0,0,0,3,0,2,0,2,0
-elient,com.clientApi,ClientService,222,0,28,0,54,0,24,0,10,0
