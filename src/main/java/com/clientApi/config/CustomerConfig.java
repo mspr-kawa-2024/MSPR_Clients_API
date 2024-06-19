@@ -21,14 +21,14 @@ public class CustomerConfig {
     @Bean
     CommandLineRunner commandLineRunner(CustomerRepository repository)  {
 
-        String rawPassword1 = "password1";
-        String rawPassword2 = "password2";
-        String rawPassword3 = "password3";
-        String rawPassword4 = "password4";
-        String p1 = encoder.encode(rawPassword1);
-        String p2 = encoder.encode(rawPassword2);
-        String p3 = encoder.encode(rawPassword3);
-        String p4 = encoder.encode(rawPassword4);
+        String raw1 = "password1";
+        String raw2 = "password2";
+        String raw3 = "password3";
+        String raw4 = "password4";
+        String p1 = encoder.encode(raw1);
+        String p2 = encoder.encode(raw2);
+        String p3 = encoder.encode(raw3);
+        String p4 = encoder.encode(raw4);
 
         // Have access to our repository
         return args -> {
