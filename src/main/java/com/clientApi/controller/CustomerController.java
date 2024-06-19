@@ -67,7 +67,7 @@ public class CustomerController {
     }
 
     @GetMapping("/{clientId}/orders/{orderId}/products")
-    public ResponseEntity<?> getCustomerOrderProducts(@PathVariable Long clientId, @PathVariable Long orderId) {
+    public ResponseEntity<?> getCustomerOrderProducts(@PathVariable Long clientId, @PathVariable Long orderId) throws InterruptedException {
         String ids = clientId.toString() + "," + orderId.toString();
 
         if (customerService.getClientById(clientId) == null) {
@@ -80,7 +80,7 @@ public class CustomerController {
         try {
             Thread.sleep(1000); // Attendre 1 seconde pour que le message soit reçu. Ajustez selon vos besoins.
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            throw new InterruptedException();
         }
 
         String commandOfClient = rabbitMQReceiver.getReceivedMessage();
