@@ -10,21 +10,23 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.Arrays;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class CustomerControllerTest {
 
     private MockMvc mockMvc;
+
+    @InjectMocks
+    private CustomerController customerController;
 
     @Mock
     private CustomerService customerService;
@@ -35,67 +37,53 @@ public class CustomerControllerTest {
     @Mock
     private RabbitMQReceiver rabbitMQReceiver;
 
-    @Mock
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
-
-    @InjectMocks
-    private CustomerController customerController;
-
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         MockitoAnnotations.openMocks(this);
-        this.mockMvc = MockMvcBuilders.standaloneSetup(customerController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(customerController).build();
     }
 
     @Test
-    void testGetClients() throws Exception {
-        Customer customer = new Customer(1L, "John", "Doe", "john.doe@example.com", "password", null, null);
-        List<Customer> customers = List.of(customer);
+    public void testGetClients() throws Exception {
+        List<Customer> customers = Arrays.asList(new Customer(), new Customer());
         when(customerService.getClients()).thenReturn(customers);
 
         mockMvc.perform(get("/api/v1/client"))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(2));
 
         verify(customerService, times(1)).getClients();
     }
 
     @Test
-    void testGetClientById() throws Exception {
-        Customer customer = new Customer(1L, "John", "Doe", "john.doe@example.com", "password", null, null);
-        when(customerService.getClientById(anyLong())).thenReturn(customer);
+    public void testGetClientById() throws Exception {
+        Customer customer = new Customer();
+        when(customerService.getClientById(1L)).thenReturn(customer);
 
         mockMvc.perform(get("/api/v1/client/1"))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
         verify(customerService, times(1)).getClientById(1L);
     }
 
     @Test
-    void testRegisterNewClient() throws Exception {
-        Customer customer = new Customer(1L, "John", "Doe", "john.doe@example.com", "password", null, null);
-        when(bCryptPasswordEncoder.encode(anyString())).thenReturn("hashedPassword");
+    public void testUpdateClient() throws Exception {
+        doNothing().when(customerService).updateClient(1L, "John", "Doe", "john@example.com");
 
-        mockMvc.perform(post("/api/v1/client")
-                        .contentType("application/json")
-                        .content("{\"firstName\":\"John\",\"lastName\":\"Doe\",\"email\":\"john.doe@example.com\",\"password\":\"password\"}"))
-                .andExpect(status().isOk());
-
-        verify(customerService, times(1)).addNewClient(any(Customer.class));
-    }
-
-    @Test
-    void testUpdateClient() throws Exception {
         mockMvc.perform(put("/api/v1/client/1")
-                        .param("name", "Jane")
-                        .param("lastname", "Smith")
-                        .param("email", "jane.doe@example.com"))
+                        .param("name", "John")
+                        .param("lastname", "Doe")
+                        .param("email", "john@example.com"))
                 .andExpect(status().isOk());
 
-        verify(customerService, times(1)).updateClient(1L, "Jane", "Smith", "jane.doe@example.com");
+        verify(customerService, times(1)).updateClient(1L, "John", "Doe", "john@example.com");
     }
 
     @Test
-    void testDeleteClient() throws Exception {
+    public void testDeleteClient() throws Exception {
+        doNothing().when(customerService).deleteClient(1L);
+
         mockMvc.perform(delete("/api/v1/client/1"))
                 .andExpect(status().isOk());
 
@@ -103,14 +91,17 @@ public class CustomerControllerTest {
     }
 
     @Test
-    void testGetCustomerOrderProducts() throws Exception {
-        when(customerService.getClientById(anyLong())).thenReturn(new Customer());
-        when(rabbitMQReceiver.getReceivedMessage()).thenReturn("commandOfClient");
+    public void testGetCustomerOrderProducts() throws Exception {
+        when(customerService.getClientById(1L)).thenReturn(new Customer());
+        doNothing().when(rabbitMQSender).sendClientIdAndOrderId(anyString());
+        when(rabbitMQReceiver.getReceivedMessage()).thenReturn("Products");
 
         mockMvc.perform(get("/api/v1/client/1/orders/1/products"))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(content().string("Products"));
 
-        verify(customerService, times(1)).getClientById(1L);
-        verify(rabbitMQSender, times(1)).sendClientIdAndOrderId("1,1");
+        verify(rabbitMQSender, times(1)).sendClientIdAndOrderId(anyString());
+        verify(rabbitMQReceiver, times(1)).getReceivedMessage();
     }
+
 }

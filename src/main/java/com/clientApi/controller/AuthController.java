@@ -17,8 +17,6 @@ public class AuthController {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
-
-
     @PostMapping("/register")
     public String register(@RequestBody Customer customer) {
         String encodedPassword = bCryptPasswordEncoder.encode(customer.getPassword());

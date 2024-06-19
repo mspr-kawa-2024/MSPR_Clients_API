@@ -31,25 +31,6 @@ public class AuthService {
 
 
 
-  /*  public String register(Customer customer) {
-        customer.setPassword(passwordEncoder.encode(customer.getPassword()));
-        customerRepository.save(customer);
-        return "User registered successfully";
-    }
-
-    public String authenticate(String email, String password) {
-
-       if (customerRepository.findByEmailAndPassword(email, password).isPresent()){
-           System.out.println(customerRepository.findByEmailAndPassword(email, password));
-
-       };
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
-        final UserDetails userDetails = customUserDetailsService.loadUserByUsername(email);
-        return jwtUtil.generateToken(userDetails);
-    }*/
-
-
-
     public String registerCustomer(Customer customer) {
         customer.setPassword(passwordEncoder.encode(customer.getPassword()));
         customerRepository.save(customer);

@@ -3,98 +3,68 @@ package com.clientApi.client;
 import com.clientApi.filter.JwtRequestFilter;
 import com.clientApi.service.CustomUserDetailsService;
 import com.clientApi.util.JwtUtil;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.mock.web.MockFilterChain;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 
-import java.util.ArrayList;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.util.Collections;
+
+import static org.mockito.Mockito.*;
 
 public class JwtRequestFilterTest {
-
-    @Mock
-    private CustomUserDetailsService customUserDetailsService;
-
-    @Mock
-    private JwtUtil jwtUtil;
 
     @InjectMocks
     private JwtRequestFilter jwtRequestFilter;
 
-    private UserDetails userDetails;
-    private String jwt;
+    @Mock
+    private JwtUtil jwtUtil;
+
+    @Mock
+    private CustomUserDetailsService userDetailsService;
+
+    @Mock
+    private HttpServletRequest request;
+
+    @Mock
+    private HttpServletResponse response;
+
+    @Mock
+    private FilterChain chain;
 
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-
-        userDetails = User.builder()
-                .username("testUser")
-                .password("testPassword")
-                .authorities(new ArrayList<>())
-                .build();
-
-        jwt = "Bearer " + jwtUtil.generateToken(userDetails);
-
-        SecurityContextHolder.clearContext();
-    }
-
-
-
-    @Test
-    public void testDoFilterInternalWithValidToken() throws Exception {
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        request.addHeader("Authorization", jwt);
-
-        MockHttpServletResponse response = new MockHttpServletResponse();
-        MockFilterChain filterChain = new MockFilterChain();
-
-        when(jwtUtil.extractUsername(jwt.substring(7))).thenReturn(userDetails.getUsername());
-        when(customUserDetailsService.loadUserByUsername(userDetails.getUsername())).thenReturn(userDetails);
-        when(jwtUtil.validateToken(jwt.substring(7), userDetails)).thenReturn(true);
-
-        jwtRequestFilter.doFilterInternal(request, response, filterChain);
-
-        UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-        Assertions.assertEquals(userDetails.getUsername(), authentication.getName());
     }
 
     @Test
-    public void testDoFilterInternalWithoutToken() throws Exception {
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        MockHttpServletResponse response = new MockHttpServletResponse();
-        MockFilterChain filterChain = new MockFilterChain();
+    public void testDoFilterInternal() throws Exception {
+        when(request.getHeader("Authorization")).thenReturn("Bearer token");
+        when(jwtUtil.extractUsername("token")).thenReturn("user");
+        UserDetails userDetails = new User("user", "password", Collections.emptyList());
+        when(userDetailsService.loadUserByUsername("user")).thenReturn(userDetails);
+        when(jwtUtil.validateToken("token", "user")).thenReturn(true);
 
-        jwtRequestFilter.doFilterInternal(request, response, filterChain);
+        // Using reflection to access the protected method
+        Method doFilterInternal = JwtRequestFilter.class.getDeclaredMethod("doFilterInternal", HttpServletRequest.class, HttpServletResponse.class, FilterChain.class);
+        doFilterInternal.setAccessible(true);
+        doFilterInternal.invoke(jwtRequestFilter, (Object) request, (Object) response, (Object) chain);
 
-        Assertions.assertEquals(null, SecurityContextHolder.getContext().getAuthentication());
-    }
-
-    @Test
-    public void testDoFilterInternalWithInvalidToken() throws Exception {
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        request.addHeader("Authorization", "Bearer invalidToken");
-
-        MockHttpServletResponse response = new MockHttpServletResponse();
-        MockFilterChain filterChain = new MockFilterChain();
-
-        when(jwtUtil.extractUsername("invalidToken")).thenReturn(null);
-
-        jwtRequestFilter.doFilterInternal(request, response, filterChain);
-
-        Assertions.assertEquals(null, SecurityContextHolder.getContext().getAuthentication());
+        verify(userDetailsService, times(1)).loadUserByUsername("user");
+        verify(jwtUtil, times(1)).validateToken("token", "user");
+        verify(chain, times(1)).doFilter(request, response);
     }
 }

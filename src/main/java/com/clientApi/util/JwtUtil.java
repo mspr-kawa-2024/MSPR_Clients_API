@@ -13,8 +13,7 @@ import java.util.function.Function;
 @Component
 public class JwtUtil {
 
-    private String secret = "secret";  // Utilisez un secret fort dans une application réelle
-
+    private String secret = "secret";
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
@@ -28,7 +27,7 @@ public class JwtUtil {
         return claimsResolver.apply(claims);
     }
 
-    private Claims extractAllClaims(String token) {
+    public Claims extractAllClaims(String token) {
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
     }
 

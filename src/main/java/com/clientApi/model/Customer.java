@@ -12,11 +12,12 @@ public class Customer {
     @Id
     @SequenceGenerator(
             name = "client_sequence",
-            sequenceName = "client_sequence",
+            sequenceName = "CLIENT_SEQUENCE_ID",
+            initialValue = 1,
             allocationSize = 1
     )
     @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
+            strategy = GenerationType.IDENTITY,
             generator = "client_sequence"
     )
     private Long id;
