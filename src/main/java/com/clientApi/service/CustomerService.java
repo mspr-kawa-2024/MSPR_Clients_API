@@ -68,7 +68,39 @@ public class CustomerService {
         }
         customerRepository.deleteById(clientId);
     }
+    @Transactional
+    public Customer updateClient(Long clientId, String name, String lastname, String email) {
+        Customer customer = customerRepository.findById(clientId)
+                .orElseThrow(() -> new IllegalStateException("Client with id " + clientId + " does not exists"));
 
+        boolean isUpdated = false;
+
+        if (name != null && !name.isEmpty() && !Objects.equals(customer.getFirstName(), name)){
+            customer.setFirstName(name);
+            isUpdated = true;
+        }
+
+        if (lastname != null && !lastname.isEmpty() && !Objects.equals(customer.getLastName(), lastname)){
+            customer.setLastName(lastname);
+            isUpdated = true;
+        }
+
+        if (email != null && !email.isEmpty() && !Objects.equals(customer.getEmail(), email)){
+            Optional<Customer> clientOptional = customerRepository.findByEmail(email);
+            if (clientOptional.isPresent() && !clientOptional.get().getId().equals(customer.getId())) {
+                throw new IllegalStateException("email taken");
+            }
+            customer.setEmail(email);
+            isUpdated = true;
+        }
+
+        if (isUpdated) {
+            customerRepository.save(customer);
+        }
+
+        return customer;
+    }
+/*
     @Transactional
     public void updateClient(Long clientId, String name, String lastname, String email) {
         Customer customer = customerRepository.findById(clientId)
@@ -98,7 +130,7 @@ public class CustomerService {
         if (isUpdated) {
             customerRepository.save(customer);
         }
-    }
+    }*/
 
 
     @RabbitListener(queues = "clientIdsIdQueue")

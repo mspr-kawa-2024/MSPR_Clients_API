@@ -11,15 +11,23 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/auth")
 public class AuthController {
 
-    @Autowired
-    private AuthService authService;
+    private final AuthService authService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Autowired
+    public AuthController(AuthService authService, BCryptPasswordEncoder bCryptPasswordEncoder) {
+        this.authService = authService;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    }
 
 
     @PostMapping("/register")
     public String register(@RequestBody Customer customer) {
+        if (customer.getPassword() == null || customer.getPassword().isEmpty()) {
+            throw new IllegalArgumentException("Password cannot be null or empty");
+        }
         String encodedPassword = bCryptPasswordEncoder.encode(customer.getPassword());
+        customer.setPassword(encodedPassword);
         customer.setPassword(encodedPassword);
         String token = authService.registerCustomer(customer);
         System.out.println("Registration endpoint called for user: " + customer.getEmail());
@@ -28,6 +36,10 @@ public class AuthController {
 
     @PostMapping("/login")
     public String login(@RequestBody AuthRequest authRequest) throws Exception {
+        System.out.println("Login endpoint called for user: " + authRequest.getEmail());
+        if (authRequest.getPassword() == null || authRequest.getPassword().isEmpty()) {
+            throw new IllegalArgumentException("Password cannot be null or empty");
+        }
         String token = authService.authenticateCustomer(authRequest.getEmail(), authRequest.getPassword());
         System.out.println("Login endpoint called for user: " + authRequest.getEmail());
         return token;

@@ -7,6 +7,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.lang.reflect.Method;
 import java.util.Date;
@@ -24,6 +25,8 @@ public class JwtUtilTest {
     public void setUp() {
         MockitoAnnotations.openMocks(this);
         jwtUtil = new JwtUtil();
+        String secretKey = "secret";
+        ReflectionTestUtils.setField(jwtUtil, "secret", secretKey);
     }
 
     @Test

@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CustomerService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">MSPR_Clients_API</a> &gt; <a href="index.source.html" class="el_package">com.clientApi.service</a> &gt; <span class="el_source">CustomerService.java</span></div><h1>CustomerService.java</h1><pre class="source lang-java linenums">package com.clientApi.service;
+
+import com.clientApi.model.Customer;
+import com.clientApi.config.RabbitMQReceiver;
+import com.clientApi.config.RabbitMQSender;
+import com.clientApi.repository.CustomerRepository;
+import jakarta.transaction.Transactional;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
+
+/**
+ * A class to manage the logic of the application
+ */
+@Service
+public class CustomerService {
+
+    private final CustomerRepository customerRepository;
+    @Autowired
+    private RabbitMQReceiver rabbitMQReceiver;
+    @Autowired
+    private RabbitMQSender rabbitMQSender;
+
+    @Autowired
+<span class="nc" id="L27">    public CustomerService(CustomerRepository customerRepository) {</span>
+<span class="nc" id="L28">        this.customerRepository = customerRepository;</span>
+<span class="nc" id="L29">    }</span>
+
+    /**
+     * get all the users form the database
+     * @return all the users form the database
+     */
+    public List&lt;Customer&gt; getClients() {
+<span class="nc" id="L36">        return customerRepository.findAll();</span>
+    }
+
+    public Map&lt;String, String&gt; authenticateClient(String email, String password) {
+<span class="nc" id="L40">        Map&lt;String, String&gt; response = new HashMap&lt;&gt;();</span>
+
+<span class="nc" id="L42">        Optional&lt;Customer&gt; clientOptional = customerRepository.findByEmailAndPassword(email, password);</span>
+
+<span class="nc bnc" id="L44" title="All 2 branches missed.">        if (clientOptional.isPresent()) {</span>
+<span class="nc" id="L45">            response.put(&quot;message&quot;, &quot;Authentication success&quot;);</span>
+        } else {
+<span class="nc" id="L47">            response.put(&quot;message&quot;, &quot;Authentication failed&quot;);</span>
+        }
+<span class="nc" id="L49">        return response;</span>
+    }
+
+    public Customer getClientById(Long id) {
+<span class="nc" id="L53">        return customerRepository.findById(id).orElse(null);</span>
+    }
+
+    public void addNewClient(Customer customer) {
+<span class="nc" id="L57">        Optional&lt;Customer&gt; clientByEmail = customerRepository.findByEmail(customer.getEmail());</span>
+<span class="nc bnc" id="L58" title="All 2 branches missed.">        if (clientByEmail.isPresent()) {</span>
+<span class="nc" id="L59">            throw new IllegalStateException(&quot;email taken&quot;);</span>
+        }
+<span class="nc" id="L61">        customerRepository.save(customer);</span>
+<span class="nc" id="L62">    }</span>
+
+    public void deleteClient(Long clientId) {
+<span class="nc" id="L65">        boolean exists = customerRepository.existsById(clientId);</span>
+<span class="nc bnc" id="L66" title="All 2 branches missed.">        if (!exists) {</span>
+<span class="nc" id="L67">            throw new IllegalStateException( &quot;Client with id &quot; + clientId + &quot; does not exists&quot;);</span>
+        }
+<span class="nc" id="L69">        customerRepository.deleteById(clientId);</span>
+<span class="nc" id="L70">    }</span>
+    @Transactional
+    public Customer updateClient(Long clientId, String name, String lastname, String email) {
+<span class="nc" id="L73">        Customer customer = customerRepository.findById(clientId)</span>
+<span class="nc" id="L74">                .orElseThrow(() -&gt; new IllegalStateException(&quot;Client with id &quot; + clientId + &quot; does not exists&quot;));</span>
+
+<span class="nc" id="L76">        boolean isUpdated = false;</span>
+
+<span class="nc bnc" id="L78" title="All 6 branches missed.">        if (name != null &amp;&amp; !name.isEmpty() &amp;&amp; !Objects.equals(customer.getFirstName(), name)){</span>
+<span class="nc" id="L79">            customer.setFirstName(name);</span>
+<span class="nc" id="L80">            isUpdated = true;</span>
+        }
+
+<span class="nc bnc" id="L83" title="All 6 branches missed.">        if (lastname != null &amp;&amp; !lastname.isEmpty() &amp;&amp; !Objects.equals(customer.getLastName(), lastname)){</span>
+<span class="nc" id="L84">            customer.setLastName(lastname);</span>
+<span class="nc" id="L85">            isUpdated = true;</span>
+        }
+
+<span class="nc bnc" id="L88" title="All 6 branches missed.">        if (email != null &amp;&amp; !email.isEmpty() &amp;&amp; !Objects.equals(customer.getEmail(), email)){</span>
+<span class="nc" id="L89">            Optional&lt;Customer&gt; clientOptional = customerRepository.findByEmail(email);</span>
+<span class="nc bnc" id="L90" title="All 4 branches missed.">            if (clientOptional.isPresent() &amp;&amp; !clientOptional.get().getId().equals(customer.getId())) {</span>
+<span class="nc" id="L91">                throw new IllegalStateException(&quot;email taken&quot;);</span>
+            }
+<span class="nc" id="L93">            customer.setEmail(email);</span>
+<span class="nc" id="L94">            isUpdated = true;</span>
+        }
+
+<span class="nc bnc" id="L97" title="All 2 branches missed.">        if (isUpdated) {</span>
+<span class="nc" id="L98">            customerRepository.save(customer);</span>
+        }
+
+<span class="nc" id="L101">        return customer;</span>
+    }
+/*
+    @Transactional
+    public void updateClient(Long clientId, String name, String lastname, String email) {
+        Customer customer = customerRepository.findById(clientId)
+                .orElseThrow(() -&gt; new IllegalStateException(&quot;Client with id &quot; + clientId + &quot; does not exists&quot;));
+
+        boolean isUpdated = false;
+
+        if (name != null &amp;&amp; !name.isEmpty() &amp;&amp; !Objects.equals(customer.getFirstName(), name)){
+            customer.setFirstName(name);
+            isUpdated = true;
+        }
+
+        if (lastname != null &amp;&amp; !lastname.isEmpty() &amp;&amp; !Objects.equals(customer.getLastName(), lastname)){
+            customer.setLastName(lastname);
+            isUpdated = true;
+        }
+
+        if (email != null &amp;&amp; !email.isEmpty() &amp;&amp; !Objects.equals(customer.getEmail(), email)){
+            Optional&lt;Customer&gt; clientOptional = customerRepository.findByEmail(email);
+            if (clientOptional.isPresent()) {
+                throw new IllegalStateException(&quot;email taken&quot;);
+            }
+            customer.setEmail(email);
+            isUpdated = true;
+        }
+
+        if (isUpdated) {
+            customerRepository.save(customer);
+        }
+    }*/
+
+
+    @RabbitListener(queues = &quot;clientIdsIdQueue&quot;)
+    public void verificationOfClientsToAddInOrder(String clientIdsReceived) {
+<span class="nc" id="L138">        List&lt;Long&gt; ids = convertirEnLongs(clientIdsReceived);</span>
+
+<span class="nc" id="L140">        int i = 0;</span>
+<span class="nc" id="L141">        Long idToSend = null;</span>
+<span class="nc bnc" id="L142" title="All 2 branches missed.">        for (Long id : ids) {</span>
+<span class="nc bnc" id="L143" title="All 2 branches missed.">            if (!customerRepository.existsById(id)) {</span>
+<span class="nc" id="L144">                i++;</span>
+<span class="nc" id="L145">                idToSend = id;</span>
+<span class="nc" id="L146">                break;</span>
+            }
+<span class="nc" id="L148">        }</span>
+<span class="nc bnc" id="L149" title="All 2 branches missed.">        if (i&gt;0) {</span>
+<span class="nc" id="L150">            rabbitMQSender.sendResponseOfIdsVerification(idToSend.toString());</span>
+        } else {
+<span class="nc" id="L152">            rabbitMQSender.sendResponseOfIdsVerification(&quot;ok&quot;);</span>
+        }
+<span class="nc" id="L154">    }</span>
+
+    private static List&lt;Long&gt; convertirEnLongs(String input) {
+<span class="nc" id="L157">        String[] elements = input.split(&quot;,&quot;);</span>
+<span class="nc" id="L158">        List&lt;Long&gt; result = new ArrayList&lt;&gt;();</span>
+
+<span class="nc bnc" id="L160" title="All 2 branches missed.">        for (String element : elements) {</span>
+<span class="nc" id="L161">            element = element.trim();</span>
+            try {
+<span class="nc" id="L163">                result.add(Long.parseLong(element));</span>
+<span class="nc" id="L164">            } catch (NumberFormatException e) {</span>
+<span class="nc" id="L165">                System.out.println(&quot;Erreur : '&quot; + element + &quot;' n'est pas un nombre valide.&quot;);</span>
+<span class="nc" id="L166">                return new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L167">            }</span>
+        }
+<span class="nc" id="L169">        return result;</span>
+    }
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.9.202303310957</span></div></body></html>

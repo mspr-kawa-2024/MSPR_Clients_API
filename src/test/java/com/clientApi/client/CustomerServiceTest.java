@@ -74,6 +74,7 @@ public class CustomerServiceTest {
         verify(customerRepository, times(1)).deleteById(1L);
     }
 
+
     @Test
     void testUpdateClient() {
         Customer customer = new Customer(1L, "John", "Doe", "john.doe@example.com", "password", null, null);
@@ -107,8 +108,9 @@ public class CustomerServiceTest {
     @Test
     void testUpdateClientWithTakenEmail() {
         Customer customer = new Customer(1L, "John", "Doe", "john.doe@example.com", "password", null, null);
+        Customer otherCustomer = new Customer(2L, "Alice", "Wonderland", "taken.email@example.com", "password", null, null);
         when(customerRepository.findById(anyLong())).thenReturn(Optional.of(customer));
-        when(customerRepository.findByEmail("taken.email@example.com")).thenReturn(Optional.of(new Customer()));
+        when(customerRepository.findByEmail("taken.email@example.com")).thenReturn(Optional.of(otherCustomer));
 
         assertThrows(IllegalStateException.class, () -> customerService.updateClient(1L, "Jane", "Smith", "taken.email@example.com"));
 

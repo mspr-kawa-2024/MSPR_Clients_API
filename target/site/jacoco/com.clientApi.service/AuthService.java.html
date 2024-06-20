@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AuthService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">MSPR_Clients_API</a> &gt; <a href="index.source.html" class="el_package">com.clientApi.service</a> &gt; <span class="el_source">AuthService.java</span></div><h1>AuthService.java</h1><pre class="source lang-java linenums">package com.clientApi.service;
+
+
+import com.clientApi.model.Customer;
+import com.clientApi.repository.CustomerRepository;
+import com.clientApi.util.JwtUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+
+@Service
+public class AuthService {
+
+
+
+    private final CustomerRepository customerRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final JwtUtil jwtUtil;
+
+    @Autowired
+<span class="nc" id="L28">    public AuthService(CustomerRepository customerRepository, BCryptPasswordEncoder bCryptPasswordEncoder, JwtUtil jwtUtil) {</span>
+<span class="nc" id="L29">        this.customerRepository = customerRepository;</span>
+<span class="nc" id="L30">        this.bCryptPasswordEncoder = bCryptPasswordEncoder;</span>
+<span class="nc" id="L31">        this.jwtUtil = jwtUtil;</span>
+<span class="nc" id="L32">    }</span>
+
+
+    public String registerCustomer(Customer customer) {
+<span class="nc bnc" id="L36" title="All 2 branches missed.">        if (customer.getPassword() == null) {</span>
+<span class="nc" id="L37">            throw new IllegalArgumentException(&quot;Password cannot be null&quot;);</span>
+        }
+
+<span class="nc" id="L40">        System.out.println(&quot;Registering customer: &quot; + customer.getEmail());</span>
+<span class="nc" id="L41">        System.out.println(&quot;Password before encoding: &quot; + customer.getPassword());</span>
+
+<span class="nc" id="L43">        String encodedPassword = bCryptPasswordEncoder.encode(customer.getPassword());</span>
+<span class="nc" id="L44">        customer.setPassword(encodedPassword);</span>
+<span class="nc" id="L45">        customerRepository.save(customer);</span>
+<span class="nc" id="L46">        String token = jwtUtil.generateToken(customer.getEmail());</span>
+<span class="nc" id="L47">        System.out.println(&quot;Registration successful for user: &quot; + customer.getEmail());</span>
+<span class="nc" id="L48">        System.out.println(&quot;Generated Token: &quot; + token);</span>
+<span class="nc" id="L49">        return token;</span>
+    }
+
+    public String authenticateCustomer(String email, String password) throws Exception {
+<span class="nc" id="L53">        Optional&lt;Customer&gt; customerOpt = customerRepository.findByEmail(email);</span>
+<span class="nc bnc" id="L54" title="All 2 branches missed.">        if (customerOpt.isPresent()) {</span>
+<span class="nc" id="L55">            Customer customer = customerOpt.get();</span>
+<span class="nc" id="L56">            System.out.println(&quot;Customer found: &quot; + customer.getEmail());</span>
+<span class="nc" id="L57">            System.out.println(&quot;Password before matching: &quot; + password);</span>
+<span class="nc" id="L58">            System.out.println(&quot;Encoded password in DB: &quot; + customer.getPassword());</span>
+<span class="nc bnc" id="L59" title="All 2 branches missed.">            if (bCryptPasswordEncoder.matches(password, customer.getPassword())) {</span>
+<span class="nc" id="L60">                String token = jwtUtil.generateToken(email);</span>
+<span class="nc" id="L61">                System.out.println(&quot;Login successful for user: &quot; + email);</span>
+<span class="nc" id="L62">                System.out.println(&quot;Generated Token: &quot; + token);</span>
+<span class="nc" id="L63">                return token;</span>
+            } else {
+<span class="nc" id="L65">                System.out.println(&quot;Invalid credentials for user: &quot; + email);</span>
+<span class="nc" id="L66">                throw new Exception(&quot;Invalid credentials&quot;);</span>
+            }
+        } else {
+<span class="nc" id="L69">            System.out.println(&quot;User not found: &quot; + email);</span>
+<span class="nc" id="L70">            throw new Exception(&quot;User not found&quot;);</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.9.202303310957</span></div></body></html>

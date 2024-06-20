@@ -4,13 +4,17 @@ import com.clientApi.model.Customer;
 import com.clientApi.service.CustomerService;
 import com.clientApi.config.RabbitMQReceiver;
 import com.clientApi.config.RabbitMQSender;
+import com.clientApi.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(path = "api/v1/client")
@@ -22,17 +26,16 @@ import java.util.List;
 public class CustomerController {
 
     private final CustomerService customerService;
+    private final RabbitMQSender rabbitMQSender;
+    private final RabbitMQReceiver rabbitMQReceiver;
+    private final JwtUtil jwtUtil;
 
     @Autowired
-    private RabbitMQSender rabbitMQSender;
-
-    @Autowired
-    private RabbitMQReceiver rabbitMQReceiver;
-
-
-    @Autowired
-    public CustomerController(CustomerService customerService) {
+    public CustomerController(CustomerService customerService, RabbitMQSender rabbitMQSender, RabbitMQReceiver rabbitMQReceiver, JwtUtil jwtUtil) {
         this.customerService = customerService;
+        this.rabbitMQSender = rabbitMQSender;
+        this.rabbitMQReceiver = rabbitMQReceiver;
+        this.jwtUtil = jwtUtil;
     }
 
 
@@ -52,14 +55,39 @@ public class CustomerController {
         }
     }
 
-
     @PutMapping(path = "{clientId}")
-    public void updateClient(@PathVariable("clientId") Long clientId,
-                             @RequestParam(required = false) String name,
-                             @RequestParam(required = false) String lastname,
-                             @RequestParam(required = false) String email) {
-        customerService.updateClient(clientId, name, lastname, email);
+    public ResponseEntity<Map<String, String>> updateClient(@PathVariable("clientId") Long clientId,
+                                                            @RequestBody Customer customerDetails) {
+        try {
+            Customer updatedCustomer = customerService.updateClient(clientId, customerDetails.getFirstName(), customerDetails.getLastName(), customerDetails.getEmail());
+            Customer updtatedCustomer = customerService.getClientById(clientId);
+            System.out.println(updtatedCustomer);
+            Map<String, String> response = new HashMap<>();
+
+            // Always generate a new token after update
+            String newToken = jwtUtil.generateToken(updatedCustomer.getEmail());
+            response.put("token", newToken);
+
+            response.put("message", "User updated successfully");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.singletonMap("error", e.getMessage()));
+        }
     }
+
+
+/*
+    @PutMapping(path = "{clientId}")
+    public ResponseEntity<Void> updateClient(@PathVariable("clientId") Long clientId,
+                                             @RequestBody Customer customerDetails) {
+        customerService.updateClient(clientId, customerDetails.getFirstName(), customerDetails.getLastName(), customerDetails.getEmail());
+
+        return ResponseEntity.ok().build();
+    }
+*/
+
+
+
 
     @DeleteMapping(path = "{clientId}")
     public void deleteClient(@PathVariable("clientId") Long clientId) {

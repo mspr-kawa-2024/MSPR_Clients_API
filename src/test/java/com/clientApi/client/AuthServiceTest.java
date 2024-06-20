@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
@@ -26,10 +27,12 @@ public class AuthServiceTest {
     private CustomerRepository customerRepository;
 
     @Mock
-    private PasswordEncoder passwordEncoder;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Mock
     private JwtUtil jwtUtil;
+
+
 
     @BeforeEach
     public void setUp() {
@@ -42,7 +45,7 @@ public class AuthServiceTest {
         customer.setEmail("test@example.com");
         customer.setPassword("password");
 
-        when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
+        when(bCryptPasswordEncoder.encode(anyString())).thenReturn("encodedPassword");
         when(jwtUtil.generateToken(anyString())).thenReturn("token");
 
         String result = authService.registerCustomer(customer);
@@ -58,7 +61,7 @@ public class AuthServiceTest {
         customer.setPassword("password");
 
         when(customerRepository.findByEmail("test@example.com")).thenReturn(Optional.of(customer));
-        when(passwordEncoder.matches("password", "password")).thenReturn(true);
+        when(bCryptPasswordEncoder.matches("password", "password")).thenReturn(true);
         when(jwtUtil.generateToken("test@example.com")).thenReturn("token");
 
         String result = authService.authenticateCustomer("test@example.com", "password");
@@ -73,7 +76,7 @@ public class AuthServiceTest {
         customer.setPassword("password");
 
         when(customerRepository.findByEmail("test@example.com")).thenReturn(Optional.of(customer));
-        when(passwordEncoder.matches("wrongPassword", "password")).thenReturn(false);
+        when(bCryptPasswordEncoder.matches("wrongPassword", "password")).thenReturn(false);
 
         Exception exception = assertThrows(Exception.class, () -> {
             authService.authenticateCustomer("test@example.com", "wrongPassword");

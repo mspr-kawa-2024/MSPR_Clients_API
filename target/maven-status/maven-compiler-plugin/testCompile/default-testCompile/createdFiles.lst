@@ -14,4 +14,3 @@ com\clientApi\client\CustomerControllerTest.class
 com\clientApi\client\JwtUtilTest.class
 com\clientApi\client\CustomerRepositoryTest.class
 com\clientApi\client\RabbitMQIntegrationTest.class
-com\clientApi\config\DatabaseInitializationTest.class

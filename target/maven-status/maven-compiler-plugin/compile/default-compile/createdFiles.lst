@@ -1,5 +1,6 @@
 com\clientApi\repository\CustomerRepository.class
 com\clientApi\config\RabbitMQConfig.class
+com\clientApi\config\WebConfig.class
 com\clientApi\service\AuthService.class
 com\clientApi\service\CustomUserDetailsService.class
 com\clientApi\controller\CustomerController.class

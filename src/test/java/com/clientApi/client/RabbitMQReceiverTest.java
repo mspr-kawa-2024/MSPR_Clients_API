@@ -9,6 +9,7 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+
 public class RabbitMQReceiverTest {
 
     @InjectMocks

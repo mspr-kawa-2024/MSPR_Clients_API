@@ -1,15 +1,15 @@
 package com.clientApi.client;
 
+import com.clientApi.CustomerApplication;
 import com.clientApi.config.RabbitMQSender;
 import com.clientApi.model.Customer;
 import com.clientApi.service.CustomerService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+import org.mockito.Mock;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
+@SpringBootTest(classes = CustomerApplication.class)
 @ActiveProfiles("test")
 @Testcontainers
 public class RabbitMQIntegrationTest {
@@ -30,7 +30,7 @@ public class RabbitMQIntegrationTest {
     @Autowired
     private RabbitMQSender rabbitMQSender;
 
-    @MockBean
+    @Mock
     private CustomerService customerService;
 
     @Container
