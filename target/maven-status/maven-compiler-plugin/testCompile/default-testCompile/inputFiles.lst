@@ -1,0 +1,15 @@
+/Users/med/Desktop/EPSI/mspr2/MSPR_Clients_API/src/test/java/com/clientApi/config/RabbitMQReceiverTest.java
+/Users/med/Desktop/EPSI/mspr2/MSPR_Clients_API/src/test/java/com/clientApi/contoller/AuthControllerTest.java
+/Users/med/Desktop/EPSI/mspr2/MSPR_Clients_API/src/test/java/com/clientApi/config/RabbitMQSenderTest.java
+/Users/med/Desktop/EPSI/mspr2/MSPR_Clients_API/src/test/java/com/clientApi/service/CustomUserDetailsServiceTest.java
+/Users/med/Desktop/EPSI/mspr2/MSPR_Clients_API/src/test/java/com/clientApi/model/CustomerTest.java
+/Users/med/Desktop/EPSI/mspr2/MSPR_Clients_API/src/test/java/com/clientApi/contoller/CustomerControllerTest.java
+/Users/med/Desktop/EPSI/mspr2/MSPR_Clients_API/src/test/java/com/clientApi/service/CustomerServiceTest.java
+/Users/med/Desktop/EPSI/mspr2/MSPR_Clients_API/src/test/java/com/clientApi/config/JwtRequestFilterTest.java
+/Users/med/Desktop/EPSI/mspr2/MSPR_Clients_API/src/test/java/com/clientApi/model/CustomerIntegrationTest.java
+/Users/med/Desktop/EPSI/mspr2/MSPR_Clients_API/src/test/java/com/clientApi/repository/CustomerRepositoryTest.java
+/Users/med/Desktop/EPSI/mspr2/MSPR_Clients_API/src/test/java/com/clientApi/config/DatabaseInitializationTest.java
+/Users/med/Desktop/EPSI/mspr2/MSPR_Clients_API/src/test/java/com/clientApi/config/SecurityConfigIntegrationTest.java
+/Users/med/Desktop/EPSI/mspr2/MSPR_Clients_API/src/test/java/com/clientApi/config/JwtUtilTest.java
+/Users/med/Desktop/EPSI/mspr2/MSPR_Clients_API/src/test/java/com/clientApi/service/AuthServiceTest.java
+/Users/med/Desktop/EPSI/mspr2/MSPR_Clients_API/src/test/java/com/clientApi/config/RabbitMQIntegrationTest.java

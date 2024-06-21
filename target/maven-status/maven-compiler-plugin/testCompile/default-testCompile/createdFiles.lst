@@ -1,0 +1,14 @@
+com/clientApi/contoller/AuthControllerTest.class
+com/clientApi/config/SecurityConfigIntegrationTest.class
+com/clientApi/config/RabbitMQSenderTest.class
+com/clientApi/config/JwtRequestFilterTest.class
+com/clientApi/model/CustomerTest.class
+com/clientApi/model/CustomerIntegrationTest.class
+com/clientApi/service/CustomUserDetailsServiceTest.class
+com/clientApi/config/RabbitMQReceiverTest.class
+com/clientApi/config/JwtUtilTest.class
+com/clientApi/repository/CustomerRepositoryTest.class
+com/clientApi/config/RabbitMQIntegrationTest.class
+com/clientApi/contoller/CustomerControllerTest.class
+com/clientApi/service/AuthServiceTest.class
+com/clientApi/service/CustomerServiceTest.class

@@ -48,11 +48,8 @@ jobs:
       - name: Build with Maven
         run: mvn clean package
 
-      - name: Run unit tests
-        run: mvn test
-
-      - name: Generate coverage report
-        run: mvn jacoco:report
+      - name: Run unit tests and generate coverage report
+        run: mvn test jacoco:report
 
       - name: SonarCloud Scan
         env:
