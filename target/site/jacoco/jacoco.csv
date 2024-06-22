@@ -1,7 +1,7 @@
 GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
 MSPR_Clients_API,com.clientApi.config,RabbitMQSender,0,15,0,0,0,5,0,3,0,3
-MSPR_Clients_API,com.clientApi.config,CustomerConfig,119,0,0,0,27,0,4,0,4,0
-MSPR_Clients_API,com.clientApi.config,RabbitMQConfig,33,0,0,0,6,0,6,0,6,0
+MSPR_Clients_API,com.clientApi.config,CustomerConfig,0,119,0,0,0,27,0,4,0,4
+MSPR_Clients_API,com.clientApi.config,RabbitMQConfig,0,33,0,0,0,6,0,6,0,6
 MSPR_Clients_API,com.clientApi.config,SecurityConfig,50,0,0,0,11,0,6,0,6,0
 MSPR_Clients_API,com.clientApi.config,RabbitMQReceiver,0,10,0,0,0,4,0,3,0,3
 MSPR_Clients_API,com.clientApi.util,JwtUtil,1,97,2,2,0,16,2,9,0,9
@@ -12,6 +12,6 @@ MSPR_Clients_API,com.clientApi.controller,CustomerController,39,33,3,1,11,11,3,5
 MSPR_Clients_API,com.clientApi.controller,AuthController,0,39,0,0,0,9,0,3,0,3
 MSPR_Clients_API,com.clientApi.filter,JwtRequestFilter,4,80,5,5,1,21,5,2,0,2
 MSPR_Clients_API,com.clientApi.model,Customer,0,115,0,0,0,41,0,18,0,18
-MSPR_Clients_API,com.clientApi.model,AuthResponse,9,0,0,0,4,0,2,0,2,0
+MSPR_Clients_API,com.clientApi.model,AuthResponse,0,9,0,0,0,4,0,2,0,2
 MSPR_Clients_API,com.clientApi.model,AuthRequest,9,17,0,0,4,8,1,5,1,5
 MSPR_Clients_API,com.clientApi,CustomerApplication,8,0,0,0,3,0,2,0,2,0

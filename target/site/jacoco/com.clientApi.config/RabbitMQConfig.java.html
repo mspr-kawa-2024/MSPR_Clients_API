@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-<span class="nc" id="L9">public class RabbitMQConfig {</span>
+<span class="fc" id="L9">public class RabbitMQConfig {</span>
 
     public static final String ORDER_QUEUE_NAME = &quot;orderQueue&quot;;
     public static final String RESPONSE_QUEUE_NAME = &quot;orderToSendQueue&quot;;
@@ -14,26 +14,26 @@ import org.springframework.context.annotation.Configuration;
 
     @Bean
     public Queue orderQueue() {
-<span class="nc" id="L17">        return new Queue(ORDER_QUEUE_NAME, false);</span>
+<span class="fc" id="L17">        return new Queue(ORDER_QUEUE_NAME, false);</span>
     }
 
     @Bean
     public Queue responseQueue() {
-<span class="nc" id="L22">        return new Queue(RESPONSE_QUEUE_NAME, false);</span>
+<span class="fc" id="L22">        return new Queue(RESPONSE_QUEUE_NAME, false);</span>
     }
 
     @Bean
     public Queue orderProductQueue() {
-<span class="nc" id="L27">        return new Queue(ORDER_PRODUCT_QUEUE_NAME, false);</span>
+<span class="fc" id="L27">        return new Queue(ORDER_PRODUCT_QUEUE_NAME, false);</span>
     }
 
     @Bean
     public Queue clientIdsIdQueue() {
-<span class="nc" id="L32">        return new Queue(&quot;clientIdsIdQueue&quot;, false);</span>
+<span class="fc" id="L32">        return new Queue(&quot;clientIdsIdQueue&quot;, false);</span>
     }
     @Bean
     public Queue responseClientIdsVerificationQueue() {
-<span class="nc" id="L36">        return new Queue(&quot;responseClientIdsVerificationQueue&quot;, false);</span>
+<span class="fc" id="L36">        return new Queue(&quot;responseClientIdsVerificationQueue&quot;, false);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.9.202303310957</span></div></body></html>

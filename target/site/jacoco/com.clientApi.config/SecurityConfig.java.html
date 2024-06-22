@@ -37,14 +37,15 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 <span class="nc" id="L39">        http</span>
-<span class="nc" id="L40">            .csrf(AbstractHttpConfigurer::disable)</span>
-<span class="nc" id="L41">            .authorizeHttpRequests(auth -&gt; auth</span>
-<span class="nc" id="L42">                    .requestMatchers(&quot;/auth/register&quot;, &quot;/auth/login&quot;).permitAll()</span>
-<span class="nc" id="L43">                    .anyRequest().authenticated()</span>
+            // Disabling CSRF protection as this is a stateless REST API using JWT for authentication
+<span class="nc" id="L41">            .csrf(AbstractHttpConfigurer::disable)</span>
+<span class="nc" id="L42">            .authorizeHttpRequests(auth -&gt; auth</span>
+<span class="nc" id="L43">                    .requestMatchers(&quot;/auth/register&quot;, &quot;/auth/login&quot;).permitAll()</span>
+<span class="nc" id="L44">                    .anyRequest().authenticated()</span>
             )
-<span class="nc" id="L45">            .sessionManagement(session -&gt; session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))</span>
-<span class="nc" id="L46">            .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);</span>
-<span class="nc" id="L47">            return http.build();</span>
+<span class="nc" id="L46">            .sessionManagement(session -&gt; session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))</span>
+<span class="nc" id="L47">            .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);</span>
+<span class="nc" id="L48">            return http.build();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.9.202303310957</span></div></body></html>

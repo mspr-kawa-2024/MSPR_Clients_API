@@ -139,6 +139,11 @@
 			<scope>runtime</scope>
 			<optional>true</optional>
 		</dependency>
+		<dependency>
+			<groupId>com.google.cloud.sql</groupId>
+			<artifactId>mysql-socket-factory</artifactId>
+			<version>1.10.0</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>

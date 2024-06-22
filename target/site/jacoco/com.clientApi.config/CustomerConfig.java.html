@@ -14,72 +14,72 @@ import java.time.Month;
 import java.util.List;
 
 @Configuration
-<span class="nc" id="L17">public class CustomerConfig {</span>
+<span class="fc" id="L17">public class CustomerConfig {</span>
 
-<span class="nc" id="L19">    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();</span>
+<span class="fc" id="L19">    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();</span>
 
     @Bean
     CommandLineRunner commandLineRunner(CustomerRepository repository)  {
 
-<span class="nc" id="L24">        String raw1 = &quot;password1&quot;;</span>
-<span class="nc" id="L25">        String raw2 = &quot;password2&quot;;</span>
-<span class="nc" id="L26">        String raw3 = &quot;password3&quot;;</span>
-<span class="nc" id="L27">        String raw4 = &quot;password4&quot;;</span>
-<span class="nc" id="L28">        String p1 = encoder.encode(raw1);</span>
-<span class="nc" id="L29">        String p2 = encoder.encode(raw2);</span>
-<span class="nc" id="L30">        String p3 = encoder.encode(raw3);</span>
-<span class="nc" id="L31">        String p4 = encoder.encode(raw4);</span>
+<span class="fc" id="L24">        String raw1 = &quot;password1&quot;;</span>
+<span class="fc" id="L25">        String raw2 = &quot;password2&quot;;</span>
+<span class="fc" id="L26">        String raw3 = &quot;password3&quot;;</span>
+<span class="fc" id="L27">        String raw4 = &quot;password4&quot;;</span>
+<span class="fc" id="L28">        String p1 = encoder.encode(raw1);</span>
+<span class="fc" id="L29">        String p2 = encoder.encode(raw2);</span>
+<span class="fc" id="L30">        String p3 = encoder.encode(raw3);</span>
+<span class="fc" id="L31">        String p4 = encoder.encode(raw4);</span>
 
         // Have access to our repository
-<span class="nc" id="L34">        return args -&gt; {</span>
+<span class="fc" id="L34">        return args -&gt; {</span>
 
-<span class="nc" id="L36">            Customer customer1 = new Customer(</span>
+<span class="fc" id="L36">            Customer customer1 = new Customer(</span>
                     &quot;firstName1&quot;,
                     &quot;lastName1&quot;,
                     &quot;email1@gmail.com&quot;,
                     p1,
-<span class="nc" id="L41">                    LocalDate.of(2023, Month.DECEMBER, 1),</span>
-<span class="nc" id="L42">                    LocalDate.of(2024, Month.JANUARY, 31)</span>
+<span class="fc" id="L41">                    LocalDate.of(2023, Month.DECEMBER, 1),</span>
+<span class="fc" id="L42">                    LocalDate.of(2024, Month.JANUARY, 31)</span>
             );
 
-<span class="nc" id="L45">            Customer customer2 = new Customer(</span>
+<span class="fc" id="L45">            Customer customer2 = new Customer(</span>
                     &quot;firstName2&quot;,
                     &quot;lastName2&quot;,
                     &quot;email2@gmail.com&quot;,
                     p2,
-<span class="nc" id="L50">                    LocalDate.of(2023, Month.DECEMBER, 1),</span>
-<span class="nc" id="L51">                    LocalDate.of(2024, Month.JANUARY, 31)</span>
+<span class="fc" id="L50">                    LocalDate.of(2023, Month.DECEMBER, 1),</span>
+<span class="fc" id="L51">                    LocalDate.of(2024, Month.JANUARY, 31)</span>
             );
 
-<span class="nc" id="L54">            Customer customer3 = new Customer(</span>
+<span class="fc" id="L54">            Customer customer3 = new Customer(</span>
                     &quot;firstName3&quot;,
                     &quot;lastName3&quot;,
                     &quot;email3@gmail.com&quot;,
                     p3,
-<span class="nc" id="L59">                    LocalDate.of(2023, Month.DECEMBER, 1),</span>
-<span class="nc" id="L60">                    LocalDate.of(2024, Month.JANUARY, 31)</span>
+<span class="fc" id="L59">                    LocalDate.of(2023, Month.DECEMBER, 1),</span>
+<span class="fc" id="L60">                    LocalDate.of(2024, Month.JANUARY, 31)</span>
             );
 
-<span class="nc" id="L63">            Customer customer4 = new Customer(</span>
+<span class="fc" id="L63">            Customer customer4 = new Customer(</span>
                     &quot;firstName4&quot;,
                     &quot;lastName4&quot;,
                     &quot;email4@gmail.com&quot;,
                     p4,
-<span class="nc" id="L68">                    LocalDate.of(2023, Month.DECEMBER, 1),</span>
-<span class="nc" id="L69">                    LocalDate.of(2024, Month.JANUARY, 31)</span>
+<span class="fc" id="L68">                    LocalDate.of(2023, Month.DECEMBER, 1),</span>
+<span class="fc" id="L69">                    LocalDate.of(2024, Month.JANUARY, 31)</span>
             );
 
             // Save Clients into Database
-<span class="nc" id="L73">            repository.saveAll(</span>
-<span class="nc" id="L74">                    List.of(customer1, customer2, customer3, customer4)</span>
+<span class="fc" id="L73">            repository.saveAll(</span>
+<span class="fc" id="L74">                    List.of(customer1, customer2, customer3, customer4)</span>
             );
-<span class="nc" id="L76">        };</span>
+<span class="fc" id="L76">        };</span>
     }
 
     // Configuration de RestTemplate
     @Bean
     public RestTemplate restTemplate(RestTemplateBuilder builder) {
-<span class="nc" id="L82">        return builder.build();</span>
+<span class="fc" id="L82">        return builder.build();</span>
     }
 
 }
