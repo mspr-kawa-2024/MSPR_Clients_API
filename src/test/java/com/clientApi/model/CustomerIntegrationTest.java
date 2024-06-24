@@ -1,44 +1,51 @@
 package com.clientApi.model;
 
+import com.clientApi.CustomerApplication;
 import com.clientApi.model.Customer;
 import com.clientApi.repository.CustomerRepository;
 import com.clientApi.util.JwtUtil;
 import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-/*
-@Ignore
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@DataJpaTest
+
+//@DataJpaTest
+@SpringBootTest(classes = CustomerApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource(properties = {
         "spring.jpa.hibernate.ddl-auto=create-drop"
 })
-@ActiveProfiles("test")*/
+@ActiveProfiles("test")
 public class CustomerIntegrationTest {
 
-    /*
+
     @Autowired
     private TestRestTemplate restTemplate;
 
-    @Autowired
+    @MockBean
     private CustomerRepository customerRepository;
 
     @Autowired
@@ -50,13 +57,22 @@ public class CustomerIntegrationTest {
     @BeforeEach
     void setUp() {
         customerRepository.deleteAll();
-        token = jwtTokenUtil.generateToken("testuser"); // Utilisez un nom d'utilisateur de test
+        // Ajoutez un utilisateur de test
+        customerRepository.deleteAll();
+        Customer user = new Customer(1L, "testuser", "password", "testuser@example.com", new BCryptPasswordEncoder().encode("passwordtest"), null, null);
+        customerRepository.save(user);
+        Mockito.when(customerRepository.findByEmail("testuser@example.com")).thenReturn(Optional.of(user));
+        Mockito.when(customerRepository.save(Mockito.any(Customer.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        token = jwtTokenUtil.generateToken("testuser@example.com"); // Utilisez un nom d'utilisateur de test
     }
 
     @Test
     void testGetClients() {
-        Customer customer = new Customer("John", "Doe", "john.doe@example.com", "password", null, null);
+        Customer customer = new Customer(2L,"John", "Doe", "john.doe@example.com", "password", null, null);
         customerRepository.save(customer);
+        Mockito.when(customerRepository.findAll()).thenReturn(List.of(customer));
+        Mockito.when(customerRepository.save(Mockito.any(Customer.class))).thenReturn(customer);
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token);
@@ -69,8 +85,10 @@ public class CustomerIntegrationTest {
 
     @Test
     void testUpdateClient() {
-        Customer customer = new Customer("John", "Doe", "john.doe@example.com", "password", null, null);
+        Customer customer = new Customer(2L,"John", "Doe", "john.doe@example.com", "password", null, null);
         customerRepository.save(customer);
+        Mockito.when(customerRepository.findById(2L)).thenReturn(Optional.of(customer));
+        Mockito.when(customerRepository.save(Mockito.any(Customer.class))).thenReturn(customer);
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token);
@@ -98,5 +116,5 @@ public class CustomerIntegrationTest {
 
         boolean exists = customerRepository.existsById(customer.getId());
         assertFalse(exists);
-    }*/
+    }
 }

@@ -3,10 +3,8 @@ package com.clientApi.config;
 import com.clientApi.config.RabbitMQSender;
 import com.clientApi.model.Customer;
 import com.clientApi.service.CustomerService;
-import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,14 +18,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
-/*
-@Ignore
 @SpringBootTest
 @ActiveProfiles("test")
-@Testcontainers*/
+@Testcontainers
 public class RabbitMQIntegrationTest {
 
-    /*
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
@@ -55,7 +50,16 @@ public class RabbitMQIntegrationTest {
 
         String message = "Test message";
         rabbitMQSender.sendClientIdAndOrderId(message);
+
+        // Waiting a short period to ensure the message is sent and received
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt(); // Restore interrupted state
+            throw new IllegalStateException(e); // Throw a more appropriate exception
+        }
+
         Object receivedMessage = rabbitTemplate.receiveAndConvert("orderQueue");
         assertEquals(message, receivedMessage);
-    }*/
+    }
 }
