@@ -1,8 +1,5 @@
 FROM adoptopenjdk:11-jre-hotspot
 
-# Add a volume pointing to /tmp
-VOLUME /tmp
-
 # Make port 8080 available to the world outside this container
 EXPOSE 8080
 
